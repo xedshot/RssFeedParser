@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TaskTask</string>
+    <string name="connection_error">connection error</string>
+    <string name="xml_error">xml error</string>
+</resources>
