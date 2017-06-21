@@ -2,6 +2,8 @@ package task.parser;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,11 +33,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //tv = (TextView) findViewById(R.id.tv);
 
-        GetXML getxml = new GetXML();
-        getxml.execute();
-        lv = (ListView) findViewById(R.id.lv);
+        if(isOnline(this)){
+            GetXML getxml = new GetXML();
+            getxml.execute();
+            lv = (ListView) findViewById(R.id.lv);
+        } else {
+            LinearLayout linearLayout = new LinearLayout(this);
+            setContentView(linearLayout);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            TextView textView = new TextView(this);
+            textView.setText("Нет соединения с интернетом.");
+            linearLayout.addView(textView);
+        }
 
 
 
@@ -75,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+    public static boolean isOnline(Context context)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting())
+        {
+            return true;
+        }
+        return false;
     }
 
 
